@@ -2,6 +2,7 @@ import React from 'react';
 import './ui-toolkit/css/nm-cx/main.css'
 import './App.css';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
     CHANGE_TAB
   } from './index';
@@ -21,6 +22,12 @@ const TabDisplay = (props) => {
         {tabsToDisplay}
       </ul>
     )
+  }
+
+  TabDisplay.propTypes = {
+    tabs: PropTypes.array,
+    selectedTab: PropTypes.number,
+    changeSelectedTab: PropTypes.func
   }
   
   const mapTabDisplayStateToProps = (state) => {

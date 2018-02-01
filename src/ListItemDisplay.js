@@ -2,6 +2,7 @@ import React from 'react';
 import './ui-toolkit/css/nm-cx/main.css'
 import './App.css';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 const ListItemDisplay = (props) => {
     return (
@@ -20,6 +21,11 @@ const ListItemDisplay = (props) => {
     )
   }
   
+  ListItemDisplay.propTypes = {
+    tabs: PropTypes.array,
+    selectedTab: PropTypes.number
+  }
+
   const mapListItemDisplayStateToProps = (state) => {
     return {
       tabs: state.tabs,

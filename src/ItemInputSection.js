@@ -2,6 +2,7 @@ import React from 'react';
 import './ui-toolkit/css/nm-cx/main.css'
 import './App.css';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
     CHANGE_ITEM_INPUT_TEXT,
     ADD_ITEM
@@ -29,6 +30,12 @@ const ItemInputSection = (props) => {
         </div>
       </div>
     )
+  }
+
+  ItemInputSection.propTypes = {
+    inputText: PropTypes.string,
+    changingInputItemText: PropTypes.func,
+    addItemButtonClicked: PropTypes.func
   }
   
   const mapItemInputSectionStateToProps = (state) => {

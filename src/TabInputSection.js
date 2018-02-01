@@ -3,6 +3,7 @@ import React from 'react';
 import './App.css';
 import './ui-toolkit/css/nm-cx/main.css'
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
     CHANGE_TAB_INPUT_TEXT,
     ADD_TAB
@@ -35,6 +36,14 @@ const TabInputSection = (props) => {
         </div>
       </div>
     )
+  }
+
+  TabInputSection.propTypes = {
+    tabs: PropTypes.array,
+    selectedTab: PropTypes.number,
+    inputTabText: PropTypes.string,
+    changingTabText: PropTypes.func,
+    addTabButtonClicked: PropTypes.func
   }
   
   const mapTabInputSectionStateToProps = (state) => {
