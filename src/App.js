@@ -1,21 +1,55 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 import './ui-toolkit/css/nm-cx/main.css'
+import { connect } from 'react-redux';
+import {
+  CHANGE_ITEM_INPUT_TEXT,
+  ADD_ITEM,
+  CHANGE_TAB_INPUT_TEXT,
+  ADD_TAB,
+  CHANGE_TAB
+} from './index';
 
 const ItemInputSection = (props) => {
+
+  function updateInputText(event) {
+    props.changingInputItemText(event.target.value)
+  }
+
   return (
-                          <div className="row">
-                        <div className="small-1 medium-1 large-1 columns">&nbsp;</div>
-                        <div className="small-9 medium-9 large-9 columns">
-                          <input type="text" placeholder="Item" value={props.inputItemText} onChange={props.changingInputItemText} />
-                        </div>
-                        <div className="small-2 medium-2 large-2 columns">
-                          <button onClick={props.addItemButtonClicked}>Add Item</button>
-                        </div>
-                      </div>
+    <div className="row">
+      <div className="small-1 medium-1 large-1 columns">&nbsp;</div>
+      <div className="small-9 medium-9 large-9 columns">
+        <input type="text" placeholder="Item" value={props.inputText} onChange={updateInputText} />
+      </div>
+      <div className="small-2 medium-2 large-2 columns">
+        <button onClick={props.addItemButtonClicked}>Add Item</button>
+      </div>
+    </div>
   )
 }
+
+const mapItemInputSectionStateToProps = (state) => {
+  return {
+    //tabs: state.tabs,
+    //selectedTab: state.selectedTab
+    inputText: state.tabs[state.selectedTab].inputText
+  }
+}
+
+const mapItemInputSectionDispatchToProps = (dispatch) => {
+  return {
+    changingInputItemText(text) {
+      dispatch({type: CHANGE_ITEM_INPUT_TEXT, payload: text})
+    },
+    addItemButtonClicked() {
+      dispatch({type: ADD_ITEM})
+    }
+  }
+}
+
+
+const ItemInputSectionWrapped = connect(mapItemInputSectionStateToProps, mapItemInputSectionDispatchToProps)(ItemInputSection)
 
 const ListItemDisplay = (props) => {
   return (
@@ -23,7 +57,7 @@ const ListItemDisplay = (props) => {
                         <div className="small-1 medium-1 large-1 columns">&nbsp;</div>
                         <div className="small-9 medium-9 large-9 columns">
                           <ul>
-                            {props.items.map((item, index) => (<li key={"Item" + index}>{item}</li>))}
+                            {props.tabs[props.selectedTab].items.map((item, index) => (<li key={"Item" + index}>{item}</li>))}
                           </ul>
                         </div>
                         <div className="small-2 medium-2 large-2 columns">
@@ -33,6 +67,15 @@ const ListItemDisplay = (props) => {
           
   )
 }
+
+const mapListItemDisplayStateToProps = (state) => {
+  return {
+    tabs: state.tabs,
+    selectedTab: state.selectedTab
+  }
+}
+
+const ListItemDisplayWrapped = connect(mapListItemDisplayStateToProps)(ListItemDisplay)
 
 const TabDisplay = (props) => {
 
@@ -50,16 +93,35 @@ const TabDisplay = (props) => {
   )
 }
 
+const mapTabDisplayStateToProps = (state) => {
+  return {
+    tabs: state.tabs,
+    selectedTab: state.selectedTab
+  }
+}
+
+const mapTabDisplayDispatchToProps = (dispatch) => {
+  return {
+    changeSelectedTab(index) {
+      dispatch({type: CHANGE_TAB, payload: index})
+    }
+  }
+}
+
+
+const TabDisplayWrapped = connect(mapTabDisplayStateToProps, mapTabDisplayDispatchToProps)(TabDisplay)
+
+
 const DossierDisplay = (props) => {
 
     let dossier = null;
     if (props.tabs.length > 0) {
       dossier = <div>
-                  <TabDisplay selectedTab={props.selectedTab} changeSelectedTab={props.changeSelectedTab} tabs={props.tabs}/>
+                  <TabDisplayWrapped />
                   <div className="dossierBody">
                     <div className="card">
-                      <ListItemDisplay items={props.tabs[props.selectedTab].items}/>
-                      <ItemInputSection selectedTab={props.selectedTab} inputItemText={props.tabs[props.selectedTab].inputText} changingInputItemText={props.changingInputItemText} addItemButtonClicked={props.addItemButtonClicked}/>
+                      <ListItemDisplayWrapped />
+                      <ItemInputSectionWrapped />
                     </div>
                   </div>
                 </div>
@@ -70,81 +132,72 @@ const DossierDisplay = (props) => {
     )
 }
 
-const TabInputSection = (props) => (
-  <div className="inputBoxes">
-    <div className="row">
-      <div className="small-9 medium-9 large-9 columns" />
-      <div className="small-3 medium-3 large-3 columns">
-        <input type="text" placeholder="Title" value={props.inputTabText} onChange={props.changingInputTabText} />
-      </div>
-    </div>
-    <div className="row">
-      <div className="small-9 medium-9 large-9 columns" />
-      <div className="small-3 medium-3 large-3 columns">
-        <button onClick={props.addTabButtonClicked}>Add New Tab</button>
-      </div>
-    </div>
-  </div>
-)
+const mapDossierDisplayStateToProps = (state) => {
+  return {
+    tabs: state.tabs
+  }
+}
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      inputTabText: "",
-      tabs: [],
-      selectedTab: 0
+const DossierDisplayWrapped = connect(mapDossierDisplayStateToProps)(DossierDisplay)
+
+const TabInputSection = (props) => {
+  
+  function updateTabText(event) {
+    props.changingTabText(event.target.value)
+  } 
+
+  return (
+    <div className="inputBoxes">
+      <div className="row">
+        <div className="small-9 medium-9 large-9 columns" />
+        <div className="small-3 medium-3 large-3 columns">
+          <input type="text" placeholder="Title" value={props.inputTabText} onChange={updateTabText} />
+        </div>
+      </div>
+      <div className="row">
+        <div className="small-9 medium-9 large-9 columns" />
+        <div className="small-3 medium-3 large-3 columns">
+          <button onClick={props.addTabButtonClicked}>Add New Tab</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const mapTabInputSectionStateToProps = (state) => {
+  return {
+    tabs: state.tabs,
+    selectedTab: state.selectedTab,
+    inputTabText: state.inputTabText
+  }
+}
+
+const mapTabInputSectionDispatchToProps = (dispatch) => {
+  return {
+    changingTabText(text) {
+      dispatch({type: CHANGE_TAB_INPUT_TEXT, payload: text})
+    },
+    addTabButtonClicked() {
+      dispatch({type: ADD_TAB})
     }
-    this.changingInputTabText = this.changingInputTabText.bind(this);
-    this.addTabButtonClicked = this.addTabButtonClicked.bind(this);
-    this.changingInputItemText = this.changingInputItemText.bind(this);
-    this.addItemButtonClicked = this.addItemButtonClicked.bind(this);
-    this.changeSelectedTab = this.changeSelectedTab.bind(this);
   }
+}
 
-  changingInputTabText(event) {
-    this.setState({inputTabText: event.target.value})
-  }
+const TabInputSectionWrapped = connect(mapTabInputSectionStateToProps, mapTabInputSectionDispatchToProps)(TabInputSection)
 
-  addTabButtonClicked(event) {
-    let tempArray = this.state.tabs.slice();
-    tempArray.push({tabName: this.state.inputTabText, items: [], inputText: ""})
-    this.setState({tabs: tempArray, inputTabText: "", selectedTab: tempArray.length-1})
-  }
-
-  changingInputItemText(event) {
-    let tempArray = this.state.tabs.slice();
-    tempArray[this.state.selectedTab].inputText = event.target.value;
-    this.setState({tabs: tempArray})
-  }
-
-  addItemButtonClicked(event) {
-    let tempArray = this.state.tabs.slice();
-    const tempInputText = tempArray[this.state.selectedTab].inputText;
-    tempArray[this.state.selectedTab].items.push(tempInputText);
-    tempArray[this.state.selectedTab].inputText = "";
-    this.setState({tabs: tempArray})
-  }
-
-  changeSelectedTab(index) {
-    this.setState({selectedTab: index})
-  }
-
-  render() {
-
+const App = (props) => {
 
     return (
       <div>
         <h1 className="header">Dojo Dossier</h1>
         <div className="App">
           <div className="AppContainer">
-            <TabInputSection inputTabText={this.state.inputTabText} changingInputTabText={this.changingInputTabText} addTabButtonClicked={this.addTabButtonClicked}/>
-            <DossierDisplay changeSelectedTab={this.changeSelectedTab} addItemButtonClicked={this.addItemButtonClicked} changingInputItemText={this.changingInputItemText} selectedTab={this.state.selectedTab} inputTabText={this.state.inputItemText} tabs={this.state.tabs}/>
+            <TabInputSectionWrapped />
+            <DossierDisplayWrapped />
           </div>
         </div>
       </div>
-    );
-  }
+  );
 }
 
 export default App;
