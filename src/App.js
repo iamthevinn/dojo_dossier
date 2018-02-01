@@ -8,7 +8,7 @@ const ItemInputSection = (props) => {
                           <div className="row">
                         <div className="small-1 medium-1 large-1 columns">&nbsp;</div>
                         <div className="small-9 medium-9 large-9 columns">
-                          <input type="text" placeholder="Item" value={props.inputItemText[props.selectedTab]} onChange={props.changingInputItemText} />
+                          <input type="text" placeholder="Item" value={props.inputItemText} onChange={props.changingInputItemText} />
                         </div>
                         <div className="small-2 medium-2 large-2 columns">
                           <button onClick={props.addItemButtonClicked}>Add Item</button>
@@ -50,15 +50,6 @@ const TabDisplay = (props) => {
   )
 }
 
-/*const TabDisplay = (props) => (
-  props.tabs.map((tab, index) => {
-
-    let returnTab = <li key={"Tab" + index} className="filter-nav-entry"><button key={"TabButton" + index} onClick={() => props.changeSelectedTab(index)}>{tab.tabName}</button></li>;
-    if (props.selectedTab === index)
-      returnTab = <li key={"Tab" + index} className="filter-nav-entry active"><button key={"TabButton" + index} onClick={() => props.changeSelectedTab(index)}>{tab.tabName}</button></li>
-    return returnTab})
-  )
-*/
 const DossierDisplay = (props) => {
 
     let dossier = null;
@@ -68,7 +59,7 @@ const DossierDisplay = (props) => {
                   <div className="dossierBody">
                     <div className="card">
                       <ListItemDisplay items={props.tabs[props.selectedTab].items}/>
-                      <ItemInputSection selectedTab={props.selectedTab} inputItemText={props.inputItemText} changingInputItemText={props.changingInputItemText} addItemButtonClicked={props.addItemButtonClicked}/>
+                      <ItemInputSection selectedTab={props.selectedTab} inputItemText={props.tabs[props.selectedTab].inputText} changingInputItemText={props.changingInputItemText} addItemButtonClicked={props.addItemButtonClicked}/>
                     </div>
                   </div>
                 </div>
@@ -101,8 +92,7 @@ class App extends Component {
     super(props);
     this.state = {
       inputTabText: "",
-      tabs: [], // sample data - [{tabName: One, items: [first, second]}, {tabName: Two, items: [third, fourth]}]
-      inputItemText: [],
+      tabs: [],
       selectedTab: 0
     }
     this.changingInputTabText = this.changingInputTabText.bind(this);
@@ -118,25 +108,22 @@ class App extends Component {
 
   addTabButtonClicked(event) {
     let tempArray = this.state.tabs.slice();
-    tempArray.push({tabName: this.state.inputTabText, items: []})
-    let tempInputItemText = this.state.inputItemText.slice();
-    tempInputItemText.push("")
-    this.setState({tabs: tempArray, inputTabText: "", inputItemText: tempInputItemText, selectedTab: tempInputItemText.length-1})
+    tempArray.push({tabName: this.state.inputTabText, items: [], inputText: ""})
+    this.setState({tabs: tempArray, inputTabText: "", selectedTab: tempArray.length-1})
   }
 
   changingInputItemText(event) {
-    let tempArray = this.state.inputItemText.slice();
-    tempArray[this.state.selectedTab] = event.target.value;
-    this.setState({inputItemText: tempArray})
+    let tempArray = this.state.tabs.slice();
+    tempArray[this.state.selectedTab].inputText = event.target.value;
+    this.setState({tabs: tempArray})
   }
 
   addItemButtonClicked(event) {
-    let tempArrayOfTabs = this.state.tabs.slice();
-    let tempArrayOfItemText = this.state.inputItemText.slice();
-
-    tempArrayOfTabs[this.state.selectedTab].items.push(this.state.inputItemText[this.state.selectedTab]);
-    tempArrayOfItemText[this.state.selectedTab] = ""
-    this.setState({tabs: tempArrayOfTabs, inputItemText: tempArrayOfItemText})
+    let tempArray = this.state.tabs.slice();
+    const tempInputText = tempArray[this.state.selectedTab].inputText;
+    tempArray[this.state.selectedTab].items.push(tempInputText);
+    tempArray[this.state.selectedTab].inputText = "";
+    this.setState({tabs: tempArray})
   }
 
   changeSelectedTab(index) {
@@ -152,7 +139,7 @@ class App extends Component {
         <div className="App">
           <div className="AppContainer">
             <TabInputSection inputTabText={this.state.inputTabText} changingInputTabText={this.changingInputTabText} addTabButtonClicked={this.addTabButtonClicked}/>
-            <DossierDisplay inputItemText={this.state.inputItemText} changeSelectedTab={this.changeSelectedTab} addItemButtonClicked={this.addItemButtonClicked} changingInputItemText={this.changingInputItemText} selectedTab={this.state.selectedTab} inputTabText={this.state.inputItemText} tabs={this.state.tabs}/>
+            <DossierDisplay changeSelectedTab={this.changeSelectedTab} addItemButtonClicked={this.addItemButtonClicked} changingInputItemText={this.changingInputItemText} selectedTab={this.state.selectedTab} inputTabText={this.state.inputItemText} tabs={this.state.tabs}/>
           </div>
         </div>
       </div>
