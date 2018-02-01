@@ -3,42 +3,9 @@ import logo from './logo.svg';
 import './App.css';
 import './ui-toolkit/css/nm-cx/main.css'
 
-const ListItemDisplay = (props) => {
+const ItemInputSection = (props) => {
   return (
-          <div className="small-9 medium-9 large-9 columns">
-            <ul>
-              {props.items.map((item, index) => (<li key={"Item" + index}>{item}</li>))}
-            </ul>
-          </div>
-  )
-}
-
-const TabDisplay = (props) => (
-  props.tabs.map((tab, index) => {
-
-    let returnTab = <li key={"Tab" + index} className="filter-nav-entry"><button key={"TabButton" + index} onClick={() => props.changeSelectedTab(index)}>{tab.tabName}</button></li>;
-    if (props.selectedTab === index)
-      returnTab = <li key={"Tab" + index} className="filter-nav-entry active"><button key={"TabButton" + index} onClick={() => props.changeSelectedTab(index)}>{tab.tabName}</button></li>
-    return returnTab})
-  )
-
-const DossierDisplay = (props) => {
-
-    let dossier = null;
-    if (props.tabs.length > 0) {
-      dossier = <div>
-                  <ul className="filter-nav">
-                  <TabDisplay selectedTab={props.selectedTab} changeSelectedTab={props.changeSelectedTab} tabs={props.tabs}/>
-                  </ul>
-                  <div className="dossierBody">
-                    <div className="card">
-                      <div className="row">
-                        <div className="small-1 medium-1 large-1 columns">&nbsp;</div>
-                        <ListItemDisplay items={props.tabs[props.selectedTab].items}/>
-                        <div className="small-2 medium-2 large-2 columns">
-                        </div>
-                      </div>
-                      <div className="row">
+                          <div className="row">
                         <div className="small-1 medium-1 large-1 columns">&nbsp;</div>
                         <div className="small-9 medium-9 large-9 columns">
                           <input type="text" placeholder="Item" value={props.inputItemText[props.selectedTab]} onChange={props.changingInputItemText} />
@@ -47,6 +14,61 @@ const DossierDisplay = (props) => {
                           <button onClick={props.addItemButtonClicked}>Add Item</button>
                         </div>
                       </div>
+  )
+}
+
+const ListItemDisplay = (props) => {
+  return (
+                      <div className="row">
+                        <div className="small-1 medium-1 large-1 columns">&nbsp;</div>
+                        <div className="small-9 medium-9 large-9 columns">
+                          <ul>
+                            {props.items.map((item, index) => (<li key={"Item" + index}>{item}</li>))}
+                          </ul>
+                        </div>
+                        <div className="small-2 medium-2 large-2 columns">
+                        </div>
+                      </div>
+
+          
+  )
+}
+
+const TabDisplay = (props) => {
+
+  const tabsToDisplay = props.tabs.map((tab, index) => {
+
+    let returnTab = <li key={"Tab" + index} className="filter-nav-entry"><button key={"TabButton" + index} onClick={() => props.changeSelectedTab(index)}>{tab.tabName}</button></li>;
+    if (props.selectedTab === index)
+      returnTab = <li key={"Tab" + index} className="filter-nav-entry active"><button key={"TabButton" + index} onClick={() => props.changeSelectedTab(index)}>{tab.tabName}</button></li>
+    return returnTab})
+
+  return (
+    <ul className="filter-nav">
+      {tabsToDisplay}
+    </ul>
+  )
+}
+
+/*const TabDisplay = (props) => (
+  props.tabs.map((tab, index) => {
+
+    let returnTab = <li key={"Tab" + index} className="filter-nav-entry"><button key={"TabButton" + index} onClick={() => props.changeSelectedTab(index)}>{tab.tabName}</button></li>;
+    if (props.selectedTab === index)
+      returnTab = <li key={"Tab" + index} className="filter-nav-entry active"><button key={"TabButton" + index} onClick={() => props.changeSelectedTab(index)}>{tab.tabName}</button></li>
+    return returnTab})
+  )
+*/
+const DossierDisplay = (props) => {
+
+    let dossier = null;
+    if (props.tabs.length > 0) {
+      dossier = <div>
+                  <TabDisplay selectedTab={props.selectedTab} changeSelectedTab={props.changeSelectedTab} tabs={props.tabs}/>
+                  <div className="dossierBody">
+                    <div className="card">
+                      <ListItemDisplay items={props.tabs[props.selectedTab].items}/>
+                      <ItemInputSection selectedTab={props.selectedTab} inputItemText={props.inputItemText} changingInputItemText={props.changingInputItemText} addItemButtonClicked={props.addItemButtonClicked}/>
                     </div>
                   </div>
                 </div>
@@ -56,6 +78,23 @@ const DossierDisplay = (props) => {
       dossier
     )
 }
+
+const TabInputSection = (props) => (
+  <div className="inputBoxes">
+    <div className="row">
+      <div className="small-9 medium-9 large-9 columns" />
+      <div className="small-3 medium-3 large-3 columns">
+        <input type="text" placeholder="Title" value={props.inputTabText} onChange={props.changingInputTabText} />
+      </div>
+    </div>
+    <div className="row">
+      <div className="small-9 medium-9 large-9 columns" />
+      <div className="small-3 medium-3 large-3 columns">
+        <button onClick={props.addTabButtonClicked}>Add New Tab</button>
+      </div>
+    </div>
+  </div>
+)
 
 class App extends Component {
   constructor(props) {
@@ -112,20 +151,7 @@ class App extends Component {
         <h1 className="header">Dojo Dossier</h1>
         <div className="App">
           <div className="AppContainer">
-            <div className="inputBoxes">
-              <div className="row">
-                <div className="small-9 medium-9 large-9 columns" />
-                <div className="small-3 medium-3 large-3 columns">
-                  <input type="text" placeholder="Title" value={this.state.inputTabText} onChange={this.changingInputTabText} />
-                </div>
-              </div>
-              <div className="row">
-                <div className="small-9 medium-9 large-9 columns" />
-                <div className="small-3 medium-3 large-3 columns">
-                  <button onClick={this.addTabButtonClicked}>Add New Tab</button>
-                </div>
-              </div>
-            </div>
+            <TabInputSection inputTabText={this.state.inputTabText} changingInputTabText={this.changingInputTabText} addTabButtonClicked={this.addTabButtonClicked}/>
             <DossierDisplay inputItemText={this.state.inputItemText} changeSelectedTab={this.changeSelectedTab} addItemButtonClicked={this.addItemButtonClicked} changingInputItemText={this.changingInputItemText} selectedTab={this.state.selectedTab} inputTabText={this.state.inputItemText} tabs={this.state.tabs}/>
           </div>
         </div>
