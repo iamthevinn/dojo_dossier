@@ -20,3 +20,12 @@
 .header {
   padding: 20px;
 }
+
+.listItemContainer {
+  font-size: 18px;
+  padding-top: 10px;
+}
+
+.lineitem {
+  padding: 3px;
+}

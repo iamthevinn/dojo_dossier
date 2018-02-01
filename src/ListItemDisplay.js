@@ -8,8 +8,8 @@ const ListItemDisplay = (props) => {
                         <div className="row">
                           <div className="small-1 medium-1 large-1 columns">&nbsp;</div>
                           <div className="small-9 medium-9 large-9 columns">
-                            <ul>
-                              {props.tabs[props.selectedTab].items.map((item, index) => (<li key={"Item" + index}>{item}</li>))}
+                            <ul className="listItemContainer">
+                              {props.tabs[props.selectedTab].items.map((item, index) => (<li className="lineitem" key={"Item" + index}>{item}</li>))}
                             </ul>
                           </div>
                           <div className="small-2 medium-2 large-2 columns">
