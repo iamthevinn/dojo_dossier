@@ -4,13 +4,10 @@ import './App.css';
 import './ui-toolkit/css/nm-cx/main.css'
 
 const ListItemDisplay = (props) => {
-
-  const listItems = props.items.map((item, index) => (<li key={"Item" + index}>{item}</li>))
-
   return (
           <div className="small-9 medium-9 large-9 columns">
             <ul>
-              {listItems}
+              {props.items.map((item, index) => (<li key={"Item" + index}>{item}</li>))}
             </ul>
           </div>
   )
@@ -85,7 +82,7 @@ class App extends Component {
     tempArray.push({tabName: this.state.inputTabText, items: []})
     let tempInputItemText = this.state.inputItemText.slice();
     tempInputItemText.push("")
-    this.setState({tabs: tempArray, inputTabText: "", inputItemText: tempInputItemText})
+    this.setState({tabs: tempArray, inputTabText: "", inputItemText: tempInputItemText, selectedTab: tempInputItemText.length-1})
   }
 
   changingInputItemText(event) {
