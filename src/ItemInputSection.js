@@ -12,6 +12,11 @@ const ItemInputSection = (props) => {
     function updateInputText(event) {
       props.changingInputItemText(event.target.value)
     }
+
+    function addItem() {
+        if (props.inputText.trim())
+            props.addItemButtonClicked()
+    }
   
     return (
       <div className="row">
@@ -20,7 +25,7 @@ const ItemInputSection = (props) => {
           <input type="text" placeholder="Item" value={props.inputText} onChange={updateInputText} />
         </div>
         <div className="small-2 medium-2 large-2 columns">
-          <button onClick={props.addItemButtonClicked}>Add Item</button>
+          <button onClick={addItem}>Add Item</button>
         </div>
       </div>
     )

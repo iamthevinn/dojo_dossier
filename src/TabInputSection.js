@@ -12,7 +12,12 @@ const TabInputSection = (props) => {
   
     function updateTabText(event) {
       props.changingTabText(event.target.value)
-    } 
+    }
+
+    function addTab() {
+        if (props.inputTabText.trim())
+            props.addTabButtonClicked()
+    }
   
     return (
       <div className="inputBoxes">
@@ -25,7 +30,7 @@ const TabInputSection = (props) => {
         <div className="row">
           <div className="small-9 medium-9 large-9 columns" />
           <div className="small-3 medium-3 large-3 columns">
-            <button onClick={props.addTabButtonClicked}>Add New Tab</button>
+            <button onClick={addTab}>Add New Tab</button>
           </div>
         </div>
       </div>
