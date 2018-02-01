@@ -16,35 +16,28 @@ const ListItemDisplay = (props) => {
   )
 }
 
+const TabDisplay = (props) => (
+  props.tabs.map((tab, index) => {
+
+    let returnTab = <li key={"Tab" + index} className="filter-nav-entry"><button key={"TabButton" + index} onClick={() => props.changeSelectedTab(index)}>{tab.tabName}</button></li>;
+    if (props.selectedTab === index)
+      returnTab = <li key={"Tab" + index} className="filter-nav-entry active"><button key={"TabButton" + index} onClick={() => props.changeSelectedTab(index)}>{tab.tabName}</button></li>
+    return returnTab})
+  )
+
 const DossierDisplay = (props) => {
 
     let dossier = null;
     if (props.tabs.length > 0) {
-      const tabsDisplay = props.tabs.map((tab, index) => {
-
-        let returnTab = <li key={"Tab" + index} className="filter-nav-entry"><button key={"TabButton" + index} onClick={() => props.changeSelectedTab(index)}>{tab.tabName}</button></li>;
-        if (props.selectedTab === index)
-          returnTab = <li key={"Tab" + index} className="filter-nav-entry active"><button key={"TabButton" + index} onClick={() => props.changeSelectedTab(index)}>{tab.tabName}</button></li>
-        return returnTab})
-
-        const items = props.tabs[props.selectedTab].items
-
-        // const itemTextValue = props.inputItemText[props.selectedTab];
-        // if (props.inputItemText[props.selectedTab] === "")
-        //   itemTextValue = ""
-
-
-        console.log("settingvalue")
-        console.log(props.inputItemText)
       dossier = <div>
                   <ul className="filter-nav">
-                    {tabsDisplay}
+                  <TabDisplay selectedTab={props.selectedTab} changeSelectedTab={props.changeSelectedTab} tabs={props.tabs}/>
                   </ul>
                   <div className="dossierBody">
                     <div className="card">
                       <div className="row">
                         <div className="small-1 medium-1 large-1 columns">&nbsp;</div>
-                        <ListItemDisplay items={items}/>
+                        <ListItemDisplay items={props.tabs[props.selectedTab].items}/>
                         <div className="small-2 medium-2 large-2 columns">
                         </div>
                       </div>
@@ -119,7 +112,7 @@ class App extends Component {
 
     return (
       <div>
-        <h1>Dojo Dossier</h1>
+        <h1 className="header">Dojo Dossier</h1>
         <div className="App">
           <div className="AppContainer">
             <div className="inputBoxes">
